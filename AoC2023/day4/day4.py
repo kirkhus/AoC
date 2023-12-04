@@ -40,8 +40,6 @@ for line in lines:
     card = Card(line)
     cards[card.get_id()] = card
 
-# Find answers for part one
-part1_sum = sum(series(card.get_winners()) for card in cards.values())
 
 # Loop through and create copies
 for card in cards.values():
@@ -51,8 +49,12 @@ for card in cards.values():
                 id_ = card.get_id() + x
                 cards[id_].update_count(cards[id_].get_count() + 1)
                     
-# Find answer for part two
-part2_sum = sum(card.get_count() for card in cards.values())
+# Find answers
+part1_sum, part2_sum = 0, 0
+
+for card in cards.values():
+    part1_sum += series(card.get_winners())
+    part2_sum += card.get_count()
 
 print("Part 1:", part1_sum)
 print("Part 2:", part2_sum)
