@@ -1,6 +1,29 @@
 
 import re
 
+class Card:
+    _id = 0
+    _count = 0
+    _winners = 0
+
+    def __init__(self, line):
+        self._id = line.split(":")[0]
+        self._count = 1
+        winner_numbers, your_numbers = re.split(r'\s*\|\s*', re.sub(r'^.*:\s*', '', line))
+        winner_numbers = re.split("\s{1,2}", winner_numbers)
+        your_numbers = re.split("\s{1,2}", your_numbers)
+        self._winners = len(set(winner_numbers).intersection(your_numbers))
+
+    def update_count(self, count):
+        self._count = count
+
+    def get_points(self):
+        return self._count * self._winners
+    
+    def __repr__(self):
+        return "Card: " + self._id + " " + str(self._count) + " " + str(self._winners)
+
+
 # fucntion for adding up the series
 def series(n):
     if (n == 0):
@@ -10,20 +33,19 @@ def series(n):
     else:
         return 2 * series(n - 1)
 
-
+cards = []
 lines = [line.strip() for line in open("./input4.txt").readlines()]
 
-part1_sum = 0
 for line in lines:
-    # Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-    # Remove Card x: and split on |
-    winner_numbers, your_numbers = re.split(r'\s*\|\s*', re.sub(r'^.*:\s*', '', line))
-    winner_numbers = re.split("\s{1,2}", winner_numbers)
-    your_numbers = re.split("\s{1,2}", your_numbers)
+    card = Card(line)
+    cards.append(card)
 
-    your_winners = list(set(winner_numbers).intersection(your_numbers))
 
-    part1_sum += series(len(your_winners))
+
+
+part1_sum = 0
+for card in cards:
+    part1_sum += series(card.get_points())
 
 print(part1_sum)
 
