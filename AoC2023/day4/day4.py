@@ -1,5 +1,6 @@
 import re
 
+# Data class for Card that stores id, how many cards it has, and how many winners there are on this card    
 class Card:
     def __init__(self, line):
         self._id = int(re.findall(r'^Card\s+(\d+)', line)[0]) # id that is the card number
@@ -16,14 +17,14 @@ class Card:
     def get_count(self):
         return self._count
     
-    def get_points(self):
+    def get_winners(self):
         return self._winners
-    
+
     def __str__(self):
         return f"Card: {self._id} {self._count} {self._winners}"
 
 
-# fucntion for adding up the series
+# Function for adding up the series
 def series(n):
     if n == 0:
         return 0
@@ -40,17 +41,17 @@ for line in lines:
     cards[card.get_id()] = card
 
 # Find answers for part one
-part1_sum = sum(series(card.get_points()) for card in cards.values())
+part1_sum = sum(series(card.get_winners()) for card in cards.values())
 
 # Loop through and create copies
 for card in cards.values():
-    if card.get_points() > 0:
+    if card.get_winners() > 0:
         for _ in range(card.get_count()):
-            for x in range(1, card.get_points() + 1):
+            for x in range(1, card.get_winners() + 1):
                 id_ = card.get_id() + x
                 cards[id_].update_count(cards[id_].get_count() + 1)
                     
-# Find answers for part two
+# Find answer for part two
 part2_sum = sum(card.get_count() for card in cards.values())
 
 print("Part 1:", part1_sum)
