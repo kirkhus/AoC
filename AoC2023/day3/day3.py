@@ -6,7 +6,7 @@ lines = [line.strip() for line in open("./input3.txt").readlines()]
 
 
 def store_part(line, symbol_index, part):
-    id_ = f" {lines.index(line)}-{symbol_index}"
+    id_ = f"{lines.index(line)}-{symbol_index}"
     if id_ not in parts:
         parts[id_] = [part]
     else:
@@ -25,8 +25,9 @@ def is_part(part, line, start, end):
 sum_part1 = 0
 sum_part2 = 0
 
+
 for i, line in enumerate(lines):
-    matches = re.finditer(r"(\d+)", line)
+    matches = re.finditer(r"(\d+)", line) # find ALL matches
 
     for match in matches:
         found = False
