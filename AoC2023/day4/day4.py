@@ -1,20 +1,11 @@
-
 import re
 
 class Card:
-    _id = 0
-    _count = 0
-    _winners = 0
-
     def __init__(self, line):
-        # Card   1:  4 16 87 61 11 37 43 25 49 17 | 54 36 14 55 83 58 43 15 87 17 97 11 62 75 37  4 49 80 42 61 20 79 25 24 16
-        self._id = int(re.findall(r'^Card\s+(\d+)', line)[0])
-        
+        self._id = int(re.findall(r'^Card\s+(\d+)', line)[0]) # id that is the card number
         self._count = 1
         winner_numbers, your_numbers = re.split(r'\s*\|\s*', re.sub(r'^.*:\s*', '', line))
-        winner_numbers = re.split("\s{1,2}", winner_numbers)
-        your_numbers = re.split("\s{1,2}", your_numbers)
-        self._winners = len(set(winner_numbers).intersection(your_numbers))
+        self._winners = len(set(winner_numbers.split()).intersection(your_numbers.split()))
 
     def get_id(self):  
         return self._id
@@ -26,7 +17,7 @@ class Card:
         return self._count
     
     def get_points(self):
-        return self._count * self._winners
+        return self._winners
     
     def __str__(self):
         return f"Card: {self._id} {self._count} {self._winners}"
@@ -34,7 +25,7 @@ class Card:
 
 # fucntion for adding up the series
 def series(n):
-    if (n == 0):
+    if n == 0:
         return 0
     if n == 1:
         return 1
@@ -48,25 +39,20 @@ for line in lines:
     card = Card(line)
     cards[card.get_id()] = card
 
+# Find answers for part one
+part1_sum = sum(series(card.get_points()) for card in cards.values())
 
-part1_sum = 0
-for card in cards.values() :
-    part1_sum += series(card.get_points())
-
+# Loop through and create copies
 for card in cards.values():
-    print(card)
     if card.get_points() > 0:
-        for x in range(1, card.get_points() + 1):
-            id = card.get_id()
-            if id in cards:
-                cards[id].update_count(cards[id].get_count() + 1)
-                print("Added to card")
-            
+        for _ in range(card.get_count()):
+            for x in range(1, card.get_points() + 1):
+                id_ = card.get_id() + x
+                cards[id_].update_count(cards[id_].get_count() + 1)
+                    
+# Find answers for part two
+part2_sum = sum(card.get_count() for card in cards.values())
 
-part2_sum = 0
-for card in cards.values() :
-    part2_sum += series(card.get_points())        
-
-print(part1_sum)
-print(part2_sum)
+print("Part 1:", part1_sum)
+print("Part 2:", part2_sum)
 
