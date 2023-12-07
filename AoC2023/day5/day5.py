@@ -2,7 +2,6 @@
 _SEEDS = "seeds:"
 
 keys = [
-    _SEEDS,
     "seed-to-soil map:",
     "soil-to-fertilizer map:",
     "fertilizer-to-water map:",
@@ -19,45 +18,42 @@ values ={}
 
 class Almanac:
     _name = ""
-    _destination = ""
-    _source = ""
-    _range = ""
+    _destination = []
+    _source = []
 
-    def __init__(self, name, destination, source, range):
+    def __init__(self, name):
         self._name = name
-        self._destination = destination
-        self._source = source
-        self._range = range
+        self._destination = []
+        self._source = []
+
+
+    def add_dest_source(self, dest, src, length):
+        dest, src, length = [int(x) for x in [dest, src, length]]
+        self._destination.extend(list(range(dest, dest+length)))
+        self._source.extend(list(range(src, src + length)))
 
     def __repr__(self):
-        return f"{self._name} {self._destination} {self._source} {self._range}"
+        return f"{self._name} {self._destination} {self._source}"
 
 
 def process_chuck(chunk):
     if not chunk:
         return
     
-    values[chunk[0]] = []
-
     if _SEEDS in chunk[0]: # special case
         seeds = chunk[0].split(" ")[1:]
+        values[_SEEDS] = seeds
         return
     
-
-    print(chunk)
+    values[chunk[0]] = []
     key = chunk[0]
-    values[key] = []
+    almanac = Almanac(key)
     for value in chunk[1:]:
         destination, source, range = value.split(" ")
-        almanac = Almanac(key, destination, source, range)
-        values[key].append(almanac)
-
-    print(values)
+        almanac.add_dest_source(destination, source, range)
     
-
-        
-
-
+    
+    values[key] = almanac
 
 with open("./input55.txt") as fd:
     chunk = []
@@ -69,4 +65,17 @@ with open("./input55.txt") as fd:
         if line: # remove empty lines
             chunk.append(line)
 
+    
+    process_chuck(chunk)
 
+
+
+for seed in values[_SEEDS]:
+    position = int(seed)
+    for key in keys:
+        almanac = values[key]
+        if position in almanac._source:
+            position = almanac._source[almanac._source.index(position)]
+
+    print(seed, position)
+    
