@@ -1,7 +1,8 @@
 
+_SEEDS = "seeds:"
 
 keys = [
-    "seeds:",
+    _SEEDS,
     "seed-to-soil map:",
     "soil-to-fertilizer map:",
     "fertilizer-to-water map:",
@@ -11,6 +12,8 @@ keys = [
     "humidity-to-location map:"
 ]
 
+
+seeds = []
 values ={}
 
 
@@ -18,7 +21,17 @@ class Almanac:
     _name = ""
     _destination = ""
     _source = ""
-    _range = []
+    _range = ""
+
+    def __init__(self, name, destination, source, range):
+        self._name = name
+        self._destination = destination
+        self._source = source
+        self._range = range
+
+    def __repr__(self):
+        return f"{self._name} {self._destination} {self._source} {self._range}"
+
 
 def process_chuck(chunk):
     if not chunk:
@@ -26,7 +39,22 @@ def process_chuck(chunk):
     
     values[chunk[0]] = []
 
+    if _SEEDS in chunk[0]: # special case
+        seeds = chunk[0].split(" ")[1:]
+        return
+    
+
+    print(chunk)
+    key = chunk[0]
+    values[key] = []
     for value in chunk[1:]:
+        destination, source, range = value.split(" ")
+        almanac = Almanac(key, destination, source, range)
+        values[key].append(almanac)
+
+    print(values)
+    
+
         
 
 
