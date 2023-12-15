@@ -18,20 +18,30 @@ values = {}
 
 class Almanac:
     _name = ""
-    _destination = []
-    _source = []
+    _source_start = 0
+    _destination_start = 0
+    _range = 0
 
     def __init__(self, name):
         self._name = name
-        self._destination = []
-        self._source = []
+        self._source_start = 0
+        self._destination_start = 0
+        self._range = 0
 
 
-    def add_dest_source(self, dest, src, length):
+    def add_dest_source(self, dest, src, r):
         print("Adding for ", self._name)
-        dest, src, length = [int(x) for x in [dest, src, length]]
-        self._destination.extend(range(dest, dest+length))
-        self._source.extend(range(src, src + length))
+        dest, src, r = [int(x) for x in [dest, src, r]]
+        self._destination = dest
+        self._source = src
+        self._range = r
+
+    def has_source(self, seed):
+        return seed >= self._source and seed <= (self._source + self._range)
+    
+    def get_destination(self, seed):
+        index = seed - self._source + 1
+        return self._dest + index 
 
     def __repr__(self):
         return f"{self._name} {self._destination} {self._source}"
