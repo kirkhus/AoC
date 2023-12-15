@@ -13,7 +13,7 @@ keys = [
 
 
 seeds = []
-values ={}
+values = {}
 
 
 class Almanac:
@@ -28,9 +28,10 @@ class Almanac:
 
 
     def add_dest_source(self, dest, src, length):
+        print("Adding for ", self._name)
         dest, src, length = [int(x) for x in [dest, src, length]]
-        self._destination.extend(list(range(dest, dest+length)))
-        self._source.extend(list(range(src, src + length)))
+        self._destination.extend(range(dest, dest+length))
+        self._source.extend(range(src, src + length))
 
     def __repr__(self):
         return f"{self._name} {self._destination} {self._source}"
@@ -41,7 +42,7 @@ def process_chuck(chunk):
         return
     
     if _SEEDS in chunk[0]: # special case
-        seeds = chunk[0].split(" ")[1:]
+        seeds = [int(x) for x in chunk[0].split(" ")[1:]]
         values[_SEEDS] = seeds
         return
     
@@ -55,7 +56,8 @@ def process_chuck(chunk):
     
     values[key] = almanac
 
-with open("./input55.txt") as fd:
+# read input
+with open("./input5.txt") as fd:
     chunk = []
     for line in fd:
         line = line.strip()
@@ -67,15 +69,19 @@ with open("./input55.txt") as fd:
 
     
     process_chuck(chunk)
-
-
-
+# map seeds to final location
+locations = []
 for seed in values[_SEEDS]:
-    position = int(seed)
+    original = seed
     for key in keys:
         almanac = values[key]
-        if position in almanac._source:
-            position = almanac._source[almanac._source.index(position)]
+        if seed in  almanac._source:
+            pos = almanac._source.index(seed)
+            seed = almanac._destination[pos]    
+    locations.append(seed)
+     
 
-    print(seed, position)
-    
+print("Part 1: ", min(locations))
+
+
+
