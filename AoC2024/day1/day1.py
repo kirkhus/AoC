@@ -2,7 +2,7 @@
 list1 = []
 list2 = []
 
-lines = open("./day1.txt").read().splitlines()
+lines = open("./day1.txt").readlines()
 for line in lines:
     chunk = [int(x) for x in line.strip().split('   ')]    
     list1.append(chunk[0])
