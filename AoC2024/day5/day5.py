@@ -42,28 +42,40 @@ for line in lines:
     elif "," in line:
         prints.append([int(x) for x in line.split(",")])
 
-valids = []
-invalids = []
+valid_prints = []
+invalid_prints = []
 for print_ in prints:
     if is_valid_print_part1(print_, rules):
-        valids.append(print_)
+        valid_prints.append(print_)
     else:
-        invalids.append(print_)
+        invalid_prints.append(print_)
 
 
 
-sum_part1 = sum_middle_elements(valids)
-"""
-fixed = []
-for invalid in invalids:
+sum_part1 = sum_middle_elements(valid_prints)
+fixed_list = []
+
+print("Rules")
+for r in rules:
+    print(r)
+
+print("Invalids")
+for i in invalid_prints:
+    print(i)
+
+
+for invalid_print in invalid_prints:
+    fixed_print = invalid_print.copy()
     for rule in rules:
-        if is_present(rule, invalid):
-            if not is_valid_rule(rule, invalid):
-                i = invalid.index(rule[0])
-                j = invalid.index(rule[1])
-                invalid[i] = rule[1]
-                invalid[j] = rule[0] 
-                fixed.append(invalid)
+        if is_present(rule, invalid_print):
+            if not is_valid_rule(rule, fixed_print):                
+                fixed_print.remove(rule[1])
+                fixed_print.insert(fixed_print.index(rule[0])+1, rule[1])
+
+
+
+    fixed_list.append(fixed_print)
+
                 
-print("fixed", fixed)"""
 print("Part 1:", sum_part1)
+print("Part 2:", sum_middle_elements(fixed_list))
