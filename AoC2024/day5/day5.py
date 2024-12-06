@@ -1,4 +1,18 @@
 
+def reorder_print(print_, rules):
+    ok = False
+    while not ok:
+        changed = 0
+        for rule in rules:
+            if print_.index(rule[0]) > print_.index(rule[1]):
+                print_.remove(rule[0])
+                print_.insert(print_.index(rule[1]), rule[0])
+                changed += 1
+        if changed == 0:
+            ok = True
+
+    return print_
+
 def sum_middle_elements(list_): 
     sum = 0
     for l in list_:
@@ -30,10 +44,11 @@ def is_valid_print_part1(print_, rules):
     return True
     
 
-with open("day55.txt") as file:
+with open("day5.txt") as file:
     lines = [line.strip() for line in file]
 
 rules = []
+chained_rules = {}
 prints = []
 
 for line in lines:
@@ -41,6 +56,8 @@ for line in lines:
         rules.append([int(x) for x in line.split("|")])
     elif "," in line:
         prints.append([int(x) for x in line.split(",")])
+
+
 
 valid_prints = []
 invalid_prints = []
@@ -50,23 +67,18 @@ for print_ in prints:
     else:
         invalid_prints.append(print_)
 
-
-
-sum_part1 = sum_middle_elements(valid_prints)
-fixed_list = []
+fixed_prints = []
 for print_ in invalid_prints:
-    print("Fixing print:", print_)  
-
+    present_rules_not_valid = []
     for rule in rules:
         if is_present(rule, print_):
             if not is_valid_rule(rule, print_):
-                print("Rule:", rule, print_)
-                print_.remove(rule[0])
-                print_.insert(print_.index(rule[1])+1, rule[0])
+                present_rules_not_valid.append(rule)
 
-    print("Fixed print:", print_)
-    fixed_list.append(print_)
+    present_rules_not_valid = sorted(present_rules_not_valid, key=lambda x: print_.index(x[0]))
+    print_ = reorder_print(print_, present_rules_not_valid)
+    fixed_prints.append(print_)
 
                 
-print("Part 1:", sum_part1)
-print("Part 2:", sum_middle_elements(fixed_list))
+print("Part 1:", sum_middle_elements(valid_prints))
+print("Part 2:", sum_middle_elements(fixed_prints))
