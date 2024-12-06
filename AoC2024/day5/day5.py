@@ -54,27 +54,18 @@ for print_ in prints:
 
 sum_part1 = sum_middle_elements(valid_prints)
 fixed_list = []
+for print_ in invalid_prints:
+    print("Fixing print:", print_)  
 
-print("Rules")
-for r in rules:
-    print(r)
-
-print("Invalids")
-for i in invalid_prints:
-    print(i)
-
-
-for invalid_print in invalid_prints:
-    fixed_print = invalid_print.copy()
     for rule in rules:
-        if is_present(rule, invalid_print):
-            if not is_valid_rule(rule, fixed_print):                
-                fixed_print.remove(rule[1])
-                fixed_print.insert(fixed_print.index(rule[0])+1, rule[1])
+        if is_present(rule, print_):
+            if not is_valid_rule(rule, print_):
+                print("Rule:", rule, print_)
+                print_.remove(rule[0])
+                print_.insert(print_.index(rule[1])+1, rule[0])
 
-
-
-    fixed_list.append(fixed_print)
+    print("Fixed print:", print_)
+    fixed_list.append(print_)
 
                 
 print("Part 1:", sum_part1)
