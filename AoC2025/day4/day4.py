@@ -50,7 +50,6 @@ def is_accessable(x, y):
                 rolls += 1
 
     # accessable if less than 4 rolls around
-    print(x, y, rolls)
     return rolls < 4
 
 
